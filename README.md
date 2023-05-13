@@ -4,7 +4,7 @@ Algorithm for OpenAPS implementations. To get started with OpenAPS, see the [Ope
 
 ## Installing
 
-Is integrated into [FreeAPS-X](https://github.com/mountrcg/freeaps/tree/dev-aisf_TDD).
+Is integrated into [iAPS autoISF branch](https://github.com/mountrcg/iAPS).
 
 
 ## Contributing
