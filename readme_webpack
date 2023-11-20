@@ -1,0 +1,41 @@
+Instructions edit js-files
+
+Fork oref0
+
+Change the code as you please in the folder lib, (for instance determine-basal.js).
+
+Copy the ”webpack.config” file from FreeAPS X/scripts to your ”oref0” -folder (same folder where the ”lib” older is located)
+
+In terminal cd into the same ”oref0” folder
+
+Install Node. For Mac OS pkg:  
+
+64-bit
+
+Install web pack (stay in same directory as before in terminal):
+npm install --save-dev webpack
+
+Install webpack CLI: 
+npm install -D webpack-cli
+
+Run web pack command:
+npx webpack
+
+Open your oref0 folder in Finder. 
+Open the ”dist” folder. 
+Copy the js file/s you changed
+
+Open freeaps x folder in Finder.
+
+Open FreeAPS/Resources folder.
+Open javascript/bundle folder.
+
+Replace the current js.file or files with the copied changed minimized files.
+Make sure the new files have exactly the same file name as the one you moved/deleted/replaced.
+
+Some files are renamed when compressed. For instance determine-basal.js is renamed to determineBasal.js. You need to change the name back before pasting into FAX.
+
+
+Build FreeAPS X again.
+
+That’s it!
