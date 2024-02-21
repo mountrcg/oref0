@@ -40,4 +40,3 @@ fi
 ) &
 
 oref0-version --check-for-updates > /tmp/oref0-updates.txt &
-/root/src/oref0/bin/oref0-upgrade.sh

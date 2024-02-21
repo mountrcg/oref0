@@ -24,7 +24,7 @@ rewind_indicates_cartridge_change=$(jq -r .rewind_indicates_cartridge_change $PR
 prime_indicates_pump_site_change=$(jq -r .prime_indicates_pump_site_change $PREF)
 battery_indicates_battery_change=$(jq -r .battery_indicates_battery_change $PREF)
 
-run_remote_command "oref0-normalize-temps $HISTORY" \
+oref0-normalize-temps $HISTORY \
   | jq '[ .[]
     | .medtronic = ( [ "mm://openaps/'$self'/", ( . | if ._type then ._type else .eventType end ) ] | join("") )
     | .created_at = if .created_at then .created_at else .timestamp end

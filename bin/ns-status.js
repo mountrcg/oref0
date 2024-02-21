@@ -2,12 +2,10 @@
 'use strict';
 
 var os = require("os");
-var fs = require('fs');
-var moment = require("moment");
 
 var requireUtils = require('../lib/require-utils');
+var safeRequire = requireUtils.safeRequire;
 var requireWithTimestamp = requireUtils.requireWithTimestamp;
-var safeLoadFile = requireUtils.safeLoadFile;
 
 /*
   Prepare Status info to for upload to Nightscout
@@ -25,7 +23,7 @@ var safeLoadFile = requireUtils.safeLoadFile;
 
 */
 
-function mmtuneStatus (status, cwd, mmtune_input) {
+function mmtuneStatus (status) {
     var mmtune = requireWithTimestamp(cwd + mmtune_input);
     if (mmtune) {
         if (mmtune.scanDetails && mmtune.scanDetails.length) {
@@ -37,7 +35,7 @@ function mmtuneStatus (status, cwd, mmtune_input) {
     }
 }
 
-function preferencesStatus (status, cwd ,preferences_input) {
+function preferencesStatus (status) {
     var preferences = requireWithTimestamp(cwd + preferences_input);
     if (preferences) {
       status.preferences = preferences;
@@ -49,8 +47,8 @@ function preferencesStatus (status, cwd ,preferences_input) {
     }
 }
 
-function uploaderStatus (status, cwd, uploader_input) {
-    var uploader = JSON.parse(fs.readFileSync(cwd + uploader_input, 'utf8'));
+function uploaderStatus (status) {
+    var uploader = require(cwd + uploader_input);
     if (uploader) {
         if (typeof uploader === 'number') {
             status.uploader = {
@@ -62,12 +60,9 @@ function uploaderStatus (status, cwd, uploader_input) {
     }
 }
 
+if (!module.parent) {
 
-
-
-var ns_status = function ns_status(argv_params) {
-
-    var argv = require('yargs')(argv_params)
+    var argv = require('yargs')
         .usage("$0 <clock.json> <iob.json> <suggested.json> <enacted.json> <battery.json> <reservoir.json> <status.json> [--uploader uploader.json] [mmtune.json] [--preferences preferences.json]")
         .option('preferences', {
             alias: 'p',
@@ -82,16 +77,10 @@ var ns_status = function ns_status(argv_params) {
             default: false
         })
         .strict(true)
-        .fail(function (msg, err, yargs) {
-            if (err) {
-                return console.error('Error found', err);
-            }
-            return console.error('Parsing of command arguments failed', msg)
-            })
         .help('help');
+
     var params = argv.argv;
     var inputs = params._;
- 
     var clock_input = inputs[0];
     var iob_input = inputs[1];
     var suggested_input = inputs[2];
@@ -105,11 +94,9 @@ var ns_status = function ns_status(argv_params) {
 
     if (inputs.length < 7 || inputs.length > 8) {
         argv.showHelp();
-        return;
+        process.exit(1);
     }
 
-    // TODO: For some reason the following line does not work (../package.json ia not found).
-    //var pjson = JSON.parse(fs.readFileSync('../package.json', 'utf8'));
     var pjson = require('../package.json');
 
     var cwd = process.cwd() + '/';
@@ -160,41 +147,28 @@ var ns_status = function ns_status(argv_params) {
                 version: pjson.version
             },
             pump: {
-                clock: safeLoadFile(cwd + clock_input),
-                battery: safeLoadFile(cwd + battery_input),
-                reservoir: safeLoadFile(cwd + reservoir_input),
+                clock: safeRequire(cwd + clock_input),
+                battery: safeRequire(cwd + battery_input),
+                reservoir: safeRequire(cwd + reservoir_input),
                 status: requireWithTimestamp(cwd + status_input)
             },
             created_at: new Date()
         };
 
         if (mmtune_input) {
-            mmtuneStatus(status, cwd, mmtune_input);
+            mmtuneStatus(status);
         }
 
         if (preferences_input) {
-            preferencesStatus(status, cwd ,preferences_input);
+            preferencesStatus(status);
         }
 
         if (uploader_input) {
-            uploaderStatus(status, cwd, uploader_input);
+            uploaderStatus(status);
         }
 
-        return JSON.stringify(status);
+        console.log(JSON.stringify(status));
     } catch (e) {
         return console.error("Could not parse input data: ", e);
     }
 }
-
-if (!module.parent) {
-    // remove the first parameter.
-    var command = process.argv;
-    command.shift();
-    command.shift();
-    var result = ns_status(command);
-    if(result !== undefined) {
-        console.log(result);
-    }
-}
-
-exports = module.exports = ns_status

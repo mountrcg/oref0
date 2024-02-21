@@ -17,12 +17,9 @@
 var find_insulin = require('../lib/temps');
 var find_bolus = require('../lib/bolus');
 var describe_pump = require('../lib/pump');
-var fs = require('fs');
 
-
-  
-var oref0_normalize_temps = function oref0_normalize_temps(argv_params) {  
-  var argv = require('yargs')(argv_params)
+if (!module.parent) {
+  var argv = require('yargs')
     .usage('$0 <pumphistory.json>')
     .demand(1)
     // error and show help if some other args given
@@ -34,12 +31,13 @@ var oref0_normalize_temps = function oref0_normalize_temps(argv_params) {
 
   if (params._.length > 1) {
     argv.showHelp();
-    return console.error('Too many arguments');
+    console.error('Too many arguments');
+    process.exit(1);
   }
 
   var cwd = process.cwd()
   try {
-    var all_data = JSON.parse(fs.readFileSync(cwd + '/' + iob_input));
+    var all_data = require(cwd + '/' + iob_input);
   } catch (e) {
     return console.error("Could not parse pumphistory: ", e);
   }
@@ -52,18 +50,6 @@ var oref0_normalize_temps = function oref0_normalize_temps(argv_params) {
   // treatments.sort(function (a, b) { return a.date > b.date });
 
 
-  return JSON.stringify(treatments);
+  console.log(JSON.stringify(treatments));
 }
 
-if (!module.parent) {
-   // remove the first parameter.
-   var command = process.argv;
-   command.shift();
-   command.shift();
-   var result = oref0_normalize_temps(command)
-   if(result !== undefined) {
-       console.log(result);
-   }
-}
-
-exports = module.exports = oref0_normalize_temps
