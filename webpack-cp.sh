@@ -28,7 +28,7 @@ oref0DIR=./
 apsDIR=../Tai
 
 
-bundleDIR=$apsDIR/FreeAPS/Resources/javascript/bundle
+bundleDIR=$apsDIR/Trio/Resources/javascript/bundle
 
 cp -p -v $oref0DIR/dist/autosens.js $bundleDIR/
 cp -p -v $oref0DIR/dist/autotuneCore.js $bundleDIR/autotune-core.js
