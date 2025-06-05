@@ -21,33 +21,25 @@
 npx webpack
 
 #
-#  --- Copy and rename oref0/dist .js files to FreeAPS/Resources/javascript/bundle ---
+#  --- Copy and rename oref0/dist .js files to Trio/Resources/javascript/bundle ---
 #
 # change directory variables as needed:
 oref0DIR=./
-apsDIR=../Tai
+apsDIR=../tai
 
 
 bundleDIR=$apsDIR/Trio/Resources/javascript/bundle
 
-cp -p -v $oref0DIR/dist/autosens.js $bundleDIR/
-cp -p -v $oref0DIR/dist/autotuneCore.js $bundleDIR/autotune-core.js
-cp -p -v $oref0DIR/dist/autotunePrep.js $bundleDIR/autotune-prep.js
-cp -p -v $oref0DIR/dist/basalSetTemp.js $bundleDIR/basal-set-temp.js
-cp -p -v $oref0DIR/dist/determineBasal.js $bundleDIR/determine-basal.js
-cp -p -v $oref0DIR/dist/glucoseGetLast.js $bundleDIR/glucose-get-last.js
-cp -p -v $oref0DIR/dist/iob.js $bundleDIR/
-cp -p -v $oref0DIR/dist/meal.js $bundleDIR/
-cp -p -v $oref0DIR/dist/profile.js $bundleDIR/
+cp -p -v $oref0DIR/dist/bundle/*.js $bundleDIR/
 
 echo ""
-echo "copying /lib/ source files to ./trio-oref"
+echo "copying /lib/ source files to Trio/trio-oref"
 echo ""
 echo ""
 
 cp -p -R $oref0DIR/lib $apsDIR/trio-oref/
-echo "These source files are copied from open-iaps-oref, and are for information purposes only." > $apsDIR/trio-oref/oref_source_file_info.txt
-echo "The algorithm is run based on minimised files in FreeAPS/Resources/javascript/bundle." >> $apsDIR/trio-oref/oref_source_file_info.txt
+echo "These source files are copied from https://github.com/nightscout/trio-oref, and are for information purposes only." > $apsDIR/trio-oref/oref_source_file_info.txt
+echo "The algorithm is run based on minimised files in Trio/Resources/javascript/bundle." >> $apsDIR/trio-oref/oref_source_file_info.txt
 
 # Retrieves version, branch, and tag information from Git
 git_version=$(git log -1 --format="%h" --abbrev=7)
@@ -61,6 +53,5 @@ git_branch_or_tag_version="${git_branch_or_tag} - git version: ${git_version}"
 echo "oref0 branch: ${git_branch_or_tag_version}" > $apsDIR/oref0_source_version.txt
 echo "" >> $apsDIR/oref0_source_version.txt
 echo "Last commits:" >> $apsDIR/oref0_source_version.txt
-git log -30 --oneline --abbrev=7 >> $apsDIR/oref0_source_version.txt
-
+git log --since=2024-01-01 --oneline --abbrev=7 >> $apsDIR/oref0_source_version.txt
 exit
