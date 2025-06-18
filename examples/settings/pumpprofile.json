@@ -15,7 +15,6 @@
   "maxCOB": 120,
   "wide_bg_target_range": false,
   "unsuspend_if_no_temp": true,
-  "bolussnooze_dia_divisor": 2,
   "min_5m_carbimpact": 8,
   "floating_carbs": true,
   "autotune_isf_adjustmentFraction": 1,
