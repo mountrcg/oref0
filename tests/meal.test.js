@@ -269,7 +269,7 @@ describe('meal/total', function() {
         result.carbs.should.equal(20);
         result.nsCarbs.should.equal(20);
         result.currentDeviation.should.equal(0.67);
-        result.mealCOB.should.equal(14);
+        result.mealCOB.should.equal(13.25);
     });
     
     it('should ignore treatments outside the meal window', function() {

@@ -5,6 +5,9 @@ module.exports = {
   mode: 'production',
   entry: {
     iob: './lib/iob/index.js',
+    "iobTotal": './lib/iob/total.js',
+    "iobHistory": './lib/iob/history.js',
+    "iobCalculate": './lib/iob/calculate.js',
     meal: './lib/meal/index.js',
     "determineBasal": './lib/determine-basal/determine-basal.js',
     "glucoseGetLast": './lib/glucose-get-last.js',
@@ -24,4 +27,78 @@ module.exports = {
     minimize: true,
     minimizer: [new TerserPlugin()],
   },
+  plugins: [
+    new CopyRenameWebpackPlugin({
+      entry: "determineBasal.js",
+      output: [
+        "bundle/determine-basal.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "glucoseGetLast.js",
+      output: [
+        "bundle/glucose-get-last.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "basalSetTemp.js",
+      output: [
+        "bundle/basal-set-temp.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "iob.js",
+      output: [
+        "bundle/iob.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "iobTotal.js",
+      output: [
+        "bundle/iob-total.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "iobHistory.js",
+      output: [
+        "bundle/iob-history.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "iobCalculate.js",
+      output: [
+        "bundle/iob-calculate.js"
+      ],
+    }),      
+    new CopyRenameWebpackPlugin({
+      entry: "meal.js",
+      output: [
+        "bundle/meal.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "autosens.js",
+      output: [
+        "bundle/autosens.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "profile.js",
+      output: [
+        "bundle/profile.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "autotunePrep.js",
+      output: [
+        "bundle/autotune-prep.js"
+      ],
+    }),
+    new CopyRenameWebpackPlugin({
+      entry: "autotuneCore.js",
+      output: [
+        "bundle/autotune-core.js"
+      ],
+    }),
+  ],
 };

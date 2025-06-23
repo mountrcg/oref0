@@ -364,4 +364,141 @@ describe('Suspend Logic Tests with suspendZerosIob=true', function() {
         const totalInsulin = tempBoluses.reduce((sum, bolus) => sum + bolus.insulin, 0);
         totalInsulin.should.be.approximately(0.0, 0.05);
     });
+    it('should produce -0.7 IoB with short suspend during zero temp', function() {
+        const basalprofile = [{
+            'start': '00:00:00',
+            'rate': 0.65,
+            'minutes': 0
+        }];
+        
+        const now = moment().startOf('day').add(60, 'minutes').toDate();
+        const timestamp = new Date(now).toISOString();
+        
+        // Event timestamps
+        const tempStartTime = new Date(now - (45 * 60 * 1000)); // 45 minutes ago
+        const suspendTime = new Date(now - (40 * 60 * 1000));   // 40 minutes ago
+        const resumeTime = new Date(now - (39 * 60 * 1000));    // 39 minutes ago
+        
+        const inputs = {
+            clock: timestamp,
+            history: [
+                {
+                    _type: 'TempBasal',
+                    rate: 0,
+                    date: tempStartTime.getTime(),
+                    timestamp: tempStartTime.toISOString()
+                },
+                {
+                    _type: 'TempBasalDuration',
+                    'duration (min)': 60,
+                    date: tempStartTime.getTime(),
+                    timestamp: tempStartTime.toISOString()
+                },
+                {
+                    _type: 'PumpSuspend',
+                    date: suspendTime.getTime(),
+                    timestamp: suspendTime.toISOString()
+                },
+                {
+                    _type: 'PumpResume',
+                    date: resumeTime.getTime(),
+                    timestamp: resumeTime.toISOString()
+                }
+            ].reverse(), // JS implementation expects most recent events first
+            profile: {
+                current_basal: 0.65,
+                max_daily_basal: 0.65,
+                dia: 10,
+                basalprofile: basalprofile,
+                suspend_zeros_iob: true
+            },
+            autosens: {
+                ratio: 1.4,
+                newisf: 29
+            }
+        };
+    
+        const treatments = calcTempTreatments(inputs);
+
+        // Note: the implementation does not mutate the last temp basal
+        // duration, see the next test to see that sometimes it does
+        const tempBasals = treatments.filter(t => t.rate !== undefined && t.duration > 0);
+        tempBasals.length.should.equal(1);
+        tempBasals[0].duration.should.equal(46);
+        // Calculate expected insulin impact
+        const tempBoluses = treatments.filter(t => t.insulin !== undefined);
+        const totalInsulin = tempBoluses.reduce((sum, bolus) => sum + bolus.insulin, 0);
+        
+        totalInsulin.should.be.approximately(-0.7, 0.05);
+    });
+
+    it('should produce -0.45 IoB with short suspend during zero temp', function() {
+        const basalprofile = [{
+            'start': '00:00:00',
+            'rate': 0.65,
+            'minutes': 0
+        }];
+        
+        const now = moment().startOf('day').add(60, 'minutes').toDate();
+        const timestamp = new Date(now).toISOString();
+        
+        // Event timestamps
+        const tempStartTime = new Date(now - (45 * 60 * 1000)); // 45 minutes ago
+        const suspendTime = new Date(now - (40 * 60 * 1000));   // 40 minutes ago
+        const resumeTime = new Date(now - (39 * 60 * 1000));    // 39 minutes ago
+        
+        const inputs = {
+            clock: timestamp,
+            history: [
+                {
+                    _type: 'TempBasal',
+                    rate: 0,
+                    date: tempStartTime.getTime(),
+                    timestamp: tempStartTime.toISOString()
+                },
+                {
+                    _type: 'TempBasalDuration',
+                    'duration (min)': 30,
+                    date: tempStartTime.getTime(),
+                    timestamp: tempStartTime.toISOString()
+                },
+                {
+                    _type: 'PumpSuspend',
+                    date: suspendTime.getTime(),
+                    timestamp: suspendTime.toISOString()
+                },
+                {
+                    _type: 'PumpResume',
+                    date: resumeTime.getTime(),
+                    timestamp: resumeTime.toISOString()
+                }
+            ].reverse(), // JS implementation expects most recent events first
+            profile: {
+                current_basal: 0.65,
+                max_daily_basal: 0.65,
+                dia: 10,
+                basalprofile: basalprofile,
+                suspend_zeros_iob: true
+            },
+            autosens: {
+                ratio: 1.4,
+                newisf: 29
+            }
+        };
+    
+        const treatments = calcTempTreatments(inputs);
+
+        // Note: the implementation mutates the last temp basal
+        // duration, but should not (see the previous test)
+        const tempBasals = treatments.filter(t => t.rate !== undefined && t.duration > 0);
+        tempBasals.length.should.equal(1);
+        tempBasals[0].duration.should.equal(5);
+
+        // Calculate expected insulin impact
+        const tempBoluses = treatments.filter(t => t.insulin !== undefined);
+        const totalInsulin = tempBoluses.reduce((sum, bolus) => sum + bolus.insulin, 0);
+        
+        totalInsulin.should.be.approximately(-0.45, 0.05);
+    });
+
 });

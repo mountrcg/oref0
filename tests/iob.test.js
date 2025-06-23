@@ -1674,35 +1674,22 @@ describe('IOB', function() {
     });
 
     it('should calculate IOB using a real pump history', function() {
-
-        var basalprofile = [{
-            'i': 0,
-            'start': '00:00:00',
-            'rate': 0.5,
-            'minutes': 0
-        }];
-
         const fs = require('fs');
         const path = require('path');
-        const filePath = path.join(__dirname, 'pump_history.json');
+        const filePath = path.join(__dirname, 'js_iob_input_error.json');
         const jsonString = fs.readFileSync(filePath, 'utf8');
-        const history = JSON.parse(jsonString);
+        const iobInputs = JSON.parse(jsonString);
 
-        var now = new Date('2025-02-18T23:23:31.036Z'),
+        var now = new Date(iobInputs.clock),
             timestamp = new Date(now).toISOString(),
             inputs = {
                 clock: timestamp,
-                history: history,
-                profile: {
-                    dia: 10,
-                    basalprofile: basalprofile,
-                    current_basal: 1,
-                    max_daily_basal: 1,
-                    curve: 'ultra-rapid'
-                }
+                history: iobInputs.history,
+                profile: iobInputs.profile
 
             };
 
         var iobResult = iob(inputs);
+	//console.log(iobResult);
     });
 });

@@ -185,18 +185,4 @@ describe('Calculate Total IOB', function() {
         const ultraResult = iobTotal(createOpts(treatments, createProfile(4, 'ultra-rapid')), now);
         ultraResult.iob.should.be.above(0);
     });
-
-    it('should be consistent with Swift', function() {
-	const fs = require('fs');
-        const path = require('path');
-        const filePath = path.join(__dirname, 'pump_history_error.json');
-        const jsonString = fs.readFileSync(filePath, 'utf8');
-        const history = JSON.parse(jsonString);
-	const filePath2 = path.join(__dirname, 'js_iob_input_error.json');
-        const jsonString2 = fs.readFileSync(filePath2, 'utf8');
-        const iobInputs = JSON.parse(jsonString2);
-
-	const result = iobTotal(createOpts(history, iobInputs.profile), new Date(iobInputs.clock));
-	//console.log(result);
-    });
 });

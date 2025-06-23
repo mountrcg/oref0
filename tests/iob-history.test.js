@@ -402,7 +402,8 @@ describe('Calculate Temp Treatments', function() {
 
         // Test with 60 min zero temp duration
         const treatments = calcTempTreatments(inputs, 60);
-
+        //console.log(treatments);
+	
         const tempBasals = treatments.filter(t => t.rate !== undefined);
         tempBasals[0].duration.should.equal(15);
         tempBasals[0].timestamp.should.equal(timestamp30mAgo.toISOString());
@@ -456,7 +457,8 @@ describe('Calculate Temp Treatments', function() {
         };
     
         const treatments = calcTempTreatments(inputs);
-    
+        //console.log(treatments);
+
         // Calculate expected insulin impact
         // Should be:
         // First 15 mins: (3 U/hr - 1 U/hr) * 0.25 hr = 0.5U
@@ -465,5 +467,27 @@ describe('Calculate Temp Treatments', function() {
         const tempBoluses = treatments.filter(t => t.insulin !== undefined);
         const totalInsulin = tempBoluses.reduce((sum, bolus) => sum + bolus.insulin, 0);
         totalInsulin.should.be.approximately(1.0, 0.01); // This will fail due to bug
+    });
+
+    it('should calculate treatments using a real pump history', function() {
+        const fs = require('fs');
+        const path = require('path');
+        const filePath = path.join(__dirname, 'js_iob_input_error.json');
+        const jsonString = fs.readFileSync(filePath, 'utf8');
+        const iobInputs = JSON.parse(jsonString);
+
+        var now = new Date(iobInputs.clock),
+            timestamp = new Date(now).toISOString(),
+            inputs = {
+                clock: timestamp,
+                history: iobInputs.history,
+                profile: iobInputs.profile,
+                autosens: iobInputs.autosens
+            };
+
+	var treatments = calcTempTreatments(inputs);
+	//console.log(treatments);
+	const outFilePath = path.join(__dirname, 'js_treatments.json');
+	fs.writeFileSync(outFilePath, JSON.stringify(treatments, null, 2), 'utf8');
     });
 });

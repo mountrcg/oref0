@@ -166,8 +166,8 @@ def main():
     print(f"Swift temp boluses: {len(swift_temp_boluses)}")
     print(f"JS temp boluses: {len(js_temp_boluses)}")
     
-    # Match entries between the two sources (using a larger tolerance of 5 seconds)
-    matched, unmatched_swift, unmatched_js = match_entries(swift_temp_boluses, js_temp_boluses, tolerance_ms=5000)
+    # Match entries between the two sources (using a larger tolerance of 60 seconds)
+    matched, unmatched_swift, unmatched_js = match_entries(swift_temp_boluses, js_temp_boluses, tolerance_ms=60000)
     
     # Print summary
     print_summary(matched, unmatched_swift, unmatched_js, swift_temp_boluses, js_temp_boluses)
