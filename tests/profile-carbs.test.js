@@ -1,6 +1,7 @@
 'use strict';
 
 require('should');
+const moment = require('moment');
 var _ = require('lodash');
 var proxyquire = require('proxyquire');
 
@@ -27,13 +28,13 @@ describe('Carb Ratio Profile', function() {
     };
 
     it('should return current carb ratio from schedule', function() {
-        var now = new Date('2025-01-26T02:00:00');
+        var now = moment('2016-06-13 01:00:00').toDate()
         var ratio = carb_ratios.carbRatioLookup({carbratio: carbratio_input}, null, now);
         ratio.should.equal(15);
     });
 
     it('should handle ratio schedule changes', function() {
-        var now = new Date('2025-01-26T04:00:00');
+        var now = moment('2016-06-13 04:00:00').toDate()
         var ratio = carb_ratios.carbRatioLookup({carbratio: carbratio_input}, null, now);
         ratio.should.equal(18);
     });
@@ -45,7 +46,7 @@ describe('Carb Ratio Profile', function() {
                 { offset: 0, ratio: 12, start: '00:00:00' }
             ]
         };
-        var now = new Date('2025-01-26T04:00:00');
+	    var now = new Date('2025-01-26T04:00:00');
         var ratio = carb_ratios.carbRatioLookup({carbratio: exchange_input}, null, now);
         ratio.should.equal(1); // 12 grams per exchange
     });
