@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyRenameWebpackPlugin = require("copy-rename-webpack-plugin");
 
 module.exports = {
   mode: 'production',
