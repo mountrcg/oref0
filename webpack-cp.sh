@@ -25,7 +25,7 @@ npx webpack
 #
 # change directory variables as needed:
 oref0DIR=./
-apsDIR=../tai
+apsDIR=../Tai-dev
 
 
 bundleDIR=$apsDIR/Trio/Resources/javascript/bundle
