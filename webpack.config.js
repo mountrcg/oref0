@@ -1,6 +1,5 @@
 const path = require('path');
 const TerserPlugin = require("terser-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'production',
@@ -25,19 +24,4 @@ module.exports = {
     minimize: true,
     minimizer: [new TerserPlugin()],
   },
-  plugins: [
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: 'dist/iob.js', to: 'bundle/iob.js' },
-        { from: 'dist/meal.js', to: 'bundle/meal.js' },
-        { from: 'dist/determineBasal.js', to: 'bundle/determine-basal.js' },
-        { from: 'dist/glucoseGetLast.js', to: 'bundle/glucose-get-last.js' },
-        { from: 'dist/basalSetTemp.js', to: 'bundle/basal-set-temp.js' },
-        { from: 'dist/autosens.js', to: 'bundle/autosens.js' },
-        { from: 'dist/profile.js', to: 'bundle/profile.js' },
-        { from: 'dist/autotunePrep.js', to: 'bundle/autotune-prep.js' },
-        { from: 'dist/autotuneCore.js', to: 'bundle/autotune-core.js' }
-      ]
-    })
-  ],
 };

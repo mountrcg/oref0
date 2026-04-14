@@ -18,6 +18,7 @@
 # ./lib/autotune-prep/index.js
 # ./lib/autotune/index.js
 
+rm -rf ./node_modules/.cache
 npx webpack
 
 #
@@ -30,17 +31,15 @@ apsDIR=../Tai-dev
 
 bundleDIR=$apsDIR/Trio/Resources/javascript/bundle
 
-cp -p -v $oref0DIR/dist/bundle/*.js $bundleDIR/
-
-# cp -p -v $oref0DIR/dist/autosens.js $bundleDIR/
-# cp -p -v $oref0DIR/dist/autotuneCore.js $bundleDIR/autotune-core.js
-# cp -p -v $oref0DIR/dist/autotunePrep.js $bundleDIR/autotune-prep.js
-# cp -p -v $oref0DIR/dist/basalSetTemp.js $bundleDIR/basal-set-temp.js
-# cp -p -v $oref0DIR/dist/determineBasal.js $bundleDIR/determine-basal.js
-# cp -p -v $oref0DIR/dist/glucoseGetLast.js $bundleDIR/glucose-get-last.js
-# cp -p -v $oref0DIR/dist/iob.js $bundleDIR/
-# cp -p -v $oref0DIR/dist/meal.js $bundleDIR/
-# cp -p -v $oref0DIR/dist/profile.js $bundleDIR/
+cp -p -v $oref0DIR/dist/autosens.js       $bundleDIR/autosens.js
+cp -p -v $oref0DIR/dist/autotuneCore.js   $bundleDIR/autotune-core.js
+cp -p -v $oref0DIR/dist/autotunePrep.js   $bundleDIR/autotune-prep.js
+cp -p -v $oref0DIR/dist/basalSetTemp.js   $bundleDIR/basal-set-temp.js
+cp -p -v $oref0DIR/dist/determineBasal.js $bundleDIR/determine-basal.js
+cp -p -v $oref0DIR/dist/glucoseGetLast.js $bundleDIR/glucose-get-last.js
+cp -p -v $oref0DIR/dist/iob.js            $bundleDIR/iob.js
+cp -p -v $oref0DIR/dist/meal.js           $bundleDIR/meal.js
+cp -p -v $oref0DIR/dist/profile.js        $bundleDIR/profile.js
 
 echo ""
 echo "copying /lib/ source files to ./trio-oref"
